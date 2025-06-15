@@ -102,7 +102,10 @@ class TrendFollowingStrategy(BaseStrategy):
         
         # Add exit conditions
         df['exit_signal'] = self._generate_exit_signals(df)
-        
+
+        # Derive position column for easier backtesting
+        df['position'] = df['signal'].replace(to_replace=0, method='ffill').fillna(0)
+
         return df
     
     def _filter_signals(self, signals: pd.Series) -> pd.Series:
