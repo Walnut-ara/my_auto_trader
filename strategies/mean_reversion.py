@@ -114,18 +114,25 @@ class MeanReversionStrategy(BaseStrategy):
         
         # Add mean reversion exit signals
         df['exit_signal'] = self._generate_exit_signals(df)
-        
+
+        # Create position column for compatibility with backtest utils
+        df['position'] = df['signal'].replace(to_replace=0, method='ffill').fillna(0)
+
         return df
     
-    def _calculate_zscore(self, prices: pd.Series, window: int) -> pd.Series:
-        """Calculate rolling Z-score"""
+    def _calculate_zscore(self, prices: pd.Series, window: int) -> pd.Series:␊
+        """Calculate rolling Z-score"""␊
         
         rolling_mean = prices.rolling(window=window).mean()
         rolling_std = prices.rolling(window=window).std()
         
         zscore = (prices - rolling_mean) / rolling_std
-        
+
         return zscore
+
+    # Backwards compatibility for tests expecting this method name
+    def _calculate_z_score(self, prices: pd.Series, window: int) -> pd.Series:
+        return self._calculate_zscore(prices, window)
     
     def _calculate_dynamic_thresholds(self, df: pd.DataFrame) -> Tuple[float, float]:
         """Calculate dynamic RSI thresholds based on recent distribution"""
