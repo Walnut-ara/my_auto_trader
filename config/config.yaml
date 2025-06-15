@@ -1,0 +1,28 @@
+# Broker settings
+broker:
+  name: alpaca
+  api_key: GR0G0NnQtzkGF1TvqR
+  secret_key: 9byEWzIdt2zNsiqmUmAwj8ZX7UzLaUIX2EDo
+  base_url: https://paper-api.alpaca.markets
+
+# Trading settings  
+trading:
+  initial_capital: 100000
+  max_position_size_pct: 0.1
+  max_portfolio_risk_pct: 0.2
+  max_daily_loss_pct: 0.05
+
+# Data sources
+data:
+  yahoo_finance: true
+  alpha_vantage: false
+  alpha_vantage_key: YOUR_AV_KEY
+
+# Strategies
+strategies:
+  default: adaptive
+  ml_enabled: true
+  
+# Database
+database:
+  url: sqlite:///data/trading.db

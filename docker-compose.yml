@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  trading-system:
+    build: .
+    container_name: ai-trading-system
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./reports:/app/reports
+      - ./models:/app/models
+      - ./config:/app/config
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    networks:
+      - trading-network
+
+  redis:
+    image: redis:alpine
+    container_name: trading-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - trading-network
+
+  postgres:
+    image: postgres:13
+    container_name: trading-db
+    environment:
+      - POSTGRES_USER=trading
+      - POSTGRES_PASSWORD=trading123
+      - POSTGRES_DB=trading_system
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - trading-network
+
+networks:
+  trading-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
